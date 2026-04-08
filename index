@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>NLR Summit 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f4f0;--s:#fff;--s2:#f0efe9;--bs:rgba(0,0,0,.18);--t:#1a1a18;--t2:#5a5a52;--t3:#9a9a8e;--a:#1a4a2e;--r:#b83030;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-height:100vh;}
+.shell{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;background:var(--bg);}
+@media(min-width:768px){body{background:#dddcd6;display:flex;align-items:center;justify-content:center;}
+.shell{max-width:420px;min-height:820px;border-radius:32px;overflow:hidden;box-shadow:0 12px 60px rgba(0,0,0,.22);margin:32px 0;}}
+.hero{background:var(--a);padding:56px 24px 32px;flex-shrink:0;}
+@media(min-width:768px){.hero{padding-top:32px;}}
+.eye{font-size:11px;font-family:'DM Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:8px;}
+.hero h1{font-size:26px;font-weight:600;color:#fff;line-height:1.2;margin-bottom:6px;}
+.hero p{font-size:13px;color:rgba(255,255,255,.6);}
+.chips{display:flex;gap:8px;margin-top:16px;}
+.chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 12px;font-size:11px;color:rgba(255,255,255,.7);font-family:'DM Mono',monospace;}
+.body{flex:1;padding:24px 20px 32px;display:flex;flex-direction:column;}
+.tabs{display:flex;background:var(--s2);border-radius:10px;padding:3px;margin-bottom:22px;}
+.tab{flex:1;text-align:center;padding:8px;font-size:14px;font-weight:500;border-radius:8px;cursor:pointer;color:var(--t3);transition:all .15s;}
+.tab.on{background:var(--s);color:var(--t);box-shadow:0 1px 4px rgba(0,0,0,.08);}
+.panel{display:none;flex-direction:column;}
+.panel.on{display:flex;}
+.fg{margin-bottom:14px;}
+label{display:block;font-size:11px;font-weight:500;color:var(--t3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;font-family:'DM Mono',monospace;}
+input{width:100%;padding:11px 13px;font-size:14px;font-family:'DM Sans',sans-serif;border:1px solid var(--bs);border-radius:8px;background:var(--s);color:var(--t);outline:none;transition:border-color .2s;}
+input:focus{border-color:var(--a);}
+input.err{border-color:var(--r);}
+.pw{position:relative;}
+.pw input{padding-right:42px;}
+.eyebtn{position:absolute;right:11px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--t3);display:flex;}
+.errmsg{font-size:12px;color:var(--r);margin-top:3px;display:none;}
+.errmsg.on{display:block;}
+.hint{font-size:12px;color:var(--t3);margin-top:3px;}
+.alert{background:var(--r);color:#fff;font-size:13px;padding:10px 13px;border-radius:8px;margin-bottom:12px;display:none;}
+.alert.on{display:block;}
+.submit{width:100%;padding:13px;background:var(--a);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:4px;}
+.submit:active{opacity:.85;}
+.or{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--t3);font-size:12px;}
+.or::before,.or::after{content:'';flex:1;height:1px;background:var(--bs);}
+.sso{width:100%;padding:11px;background:var(--s);border:1px solid var(--bs);border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:9px;color:var(--t);margin-bottom:8px;}
+.sso:active{background:var(--s2);}
+.foot{text-align:center;font-size:13px;color:var(--t3);margin-top:auto;padding-top:18px;}
+.foot a{color:var(--a);font-weight:500;text-decoration:none;cursor:pointer;}
+.terms{font-size:11px;color:var(--t3);text-align:center;margin-top:10px;line-height:1.5;}
+.terms a{color:var(--t2);text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="hero">
+    <div class="eye">NLR Summit 2026</div>
+    <h1>Networking Hub</h1>
+    <p>Connect with 400+ clean energy leaders, investors &amp; innovators.</p>
+    <div class="chips"><div class="chip">Apr 7–8 · Denver CO</div><div class="chip">130 Tables</div></div>
+  </div>
+  <div class="body">
+    <div class="tabs">
+      <div class="tab on" onclick="sw('login')">Sign in</div>
+      <div class="tab" onclick="sw('signup')">Create account</div>
+    </div>
+
+    <div class="panel on" id="p-login">
+      <div class="alert" id="la"></div>
+      <div class="fg"><label>Email</label>
+        <input id="le" type="email" placeholder="you@company.com" autocomplete="email">
+        <div class="errmsg" id="lee">Enter a valid email.</div>
+      </div>
+      <div class="fg"><label>Password</label>
+        <div class="pw">
+          <input id="lp" type="password" placeholder="••••••••" autocomplete="current-password">
+          <button class="eyebtn" type="button" onclick="togglePw('lp')">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M1 9s3-5 8-5 8 5 8 5-3 5-8 5-8-5-8-5z" stroke="currentColor" stroke-width="1.4"/><circle cx="9" cy="9" r="2.5" stroke="currentColor" stroke-width="1.4"/></svg>
+          </button>
+        </div>
+        <div class="errmsg" id="lpe">Password required.</div>
+      </div>
+      <div style="text-align:right;margin-bottom:4px;"><a href="#" style="font-size:13px;color:var(--a);text-decoration:none;">Forgot password?</a></div>
+      <button class="submit" onclick="doLogin()">Sign in</button>
+      <div class="or">or</div>
+      <button class="sso" onclick="doSSO()"><svg width="18" height="18" viewBox="0 0 18 18"><path d="M16.5 9.2c0-.6-.05-1.2-.16-1.7H9v3.2h4.2c-.18 1-.74 1.85-1.57 2.42v2h2.54C15.66 13.6 16.5 11.55 16.5 9.2z" fill="#4285F4"/><path d="M9 17c2.16 0 3.97-.72 5.3-1.94l-2.54-2c-.72.48-1.63.77-2.76.77-2.12 0-3.92-1.43-4.56-3.36H1.84v2.07C3.16 15.08 5.9 17 9 17z" fill="#34A853"/><path d="M4.44 10.47A4.8 4.8 0 0 1 4.19 9c0-.51.09-1.01.25-1.47V5.46H1.84A8 8 0 0 0 1 9c0 1.29.31 2.51.84 3.54l2.6-2.07z" fill="#FBBC05"/><path d="M9 3.58c1.19 0 2.26.41 3.1 1.21l2.32-2.32C13 1.19 11.16.5 9 .5 5.9.5 3.16 2.42 1.84 5.16l2.6 2.07C5.08 5.3 6.88 3.58 9 3.58z" fill="#EA4335"/></svg>Continue with Google</button>
+      <div class="foot">No account? <a onclick="sw('signup')">Create one</a></div>
+    </div>
+
+    <div class="panel" id="p-signup">
+      <div class="alert" id="sa"></div>
+      <div style="display:flex;gap:10px;">
+        <div class="fg" style="flex:1"><label>First name</label>
+          <input id="sf" type="text" placeholder="Alex" autocomplete="given-name">
+          <div class="errmsg" id="sfe">Required.</div>
+        </div>
+        <div class="fg" style="flex:1"><label>Last name</label>
+          <input id="sl" type="text" placeholder="Johnson" autocomplete="family-name">
+          <div class="errmsg" id="sle">Required.</div>
+        </div>
+      </div>
+      <div class="fg"><label>Work email</label>
+        <input id="se" type="email" placeholder="you@company.com" autocomplete="email">
+        <div class="errmsg" id="see">Enter a valid email.</div>
+      </div>
+      <div class="fg"><label>Password</label>
+        <div class="pw">
+          <input id="sp" type="password" placeholder="Min. 8 characters" autocomplete="new-password">
+          <button class="eyebtn" type="button" onclick="togglePw('sp')">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M1 9s3-5 8-5 8 5 8 5-3 5-8 5-8-5-8-5z" stroke="currentColor" stroke-width="1.4"/><circle cx="9" cy="9" r="2.5" stroke="currentColor" stroke-width="1.4"/></svg>
+          </button>
+        </div>
+        <div class="errmsg" id="spe">Min. 8 characters.</div>
+        <div class="hint">8+ characters, mix of letters and numbers.</div>
+      </div>
+      <button class="submit" onclick="doSignup()">Create account</button>
+      <div class="or">or</div>
+      <button class="sso" onclick="doSSO()"><svg width="18" height="18" viewBox="0 0 18 18"><path d="M16.5 9.2c0-.6-.05-1.2-.16-1.7H9v3.2h4.2c-.18 1-.74 1.85-1.57 2.42v2h2.54C15.66 13.6 16.5 11.55 16.5 9.2z" fill="#4285F4"/><path d="M9 17c2.16 0 3.97-.72 5.3-1.94l-2.54-2c-.72.48-1.63.77-2.76.77-2.12 0-3.92-1.43-4.56-3.36H1.84v2.07C3.16 15.08 5.9 17 9 17z" fill="#34A853"/><path d="M4.44 10.47A4.8 4.8 0 0 1 4.19 9c0-.51.09-1.01.25-1.47V5.46H1.84A8 8 0 0 0 1 9c0 1.29.31 2.51.84 3.54l2.6-2.07z" fill="#FBBC05"/><path d="M9 3.58c1.19 0 2.26.41 3.1 1.21l2.32-2.32C13 1.19 11.16.5 9 .5 5.9.5 3.16 2.42 1.84 5.16l2.6 2.07C5.08 5.3 6.88 3.58 9 3.58z" fill="#EA4335"/></svg>Continue with Google</button>
+      <div class="terms">By signing up you agree to our <a href="#">Terms</a> &amp; <a href="#">Privacy Policy</a>.</div>
+      <div class="foot">Have an account? <a onclick="sw('login')">Sign in</a></div>
+    </div>
+  </div>
+</div>
+<script>
+function sw(t){
+  ['login','signup'].forEach((v,i)=>{
+    document.querySelectorAll('.tab')[i].classList.toggle('on',v===t);
+    document.getElementById('p-'+v).classList.toggle('on',v===t);
+  });
+}
+function togglePw(id){const e=document.getElementById(id);e.type=e.type==='password'?'text':'password';}
+function v(id){return document.getElementById(id).value.trim();}
+function setE(id,on){
+  document.getElementById(id).classList.toggle('on',on);
+  const inp=document.getElementById(id.slice(0,-1));
+  if(inp&&inp.tagName==='INPUT')inp.classList.toggle('err',on);
+}
+function alert2(id,msg){const e=document.getElementById(id);e.textContent=msg;e.classList.add('on');}
+function clearAlert(id){document.getElementById(id).classList.remove('on');}
+
+function doLogin(){
+  clearAlert('la');
+  const email=v('le'),pw=v('lp');
+  setE('lee',!email||!email.includes('@'));
+  setE('lpe',!pw);
+  if(!email||!email.includes('@')||!pw)return;
+  const users=JSON.parse(localStorage.getItem('nlr_users')||'[]');
+  const user=users.find(u=>u.email===email&&u.pw===pw);
+  if(!user){alert2('la','Email or password not found.');return;}
+  localStorage.setItem('nlr_current',JSON.stringify(user));
+  location.href=user.profileComplete?'app.html':'onboarding.html';
+}
+
+function doSignup(){
+  clearAlert('sa');
+  const first=v('sf'),last=v('sl'),email=v('se'),pw=v('sp');
+  setE('sfe',!first);setE('sle',!last);
+  setE('see',!email||!email.includes('@'));
+  setE('spe',pw.length<8);
+  if(!first||!last||!email||!email.includes('@')||pw.length<8)return;
+  const users=JSON.parse(localStorage.getItem('nlr_users')||'[]');
+  if(users.find(u=>u.email===email)){alert2('sa','Account already exists for this email.');return;}
+  const user={id:Date.now(),first,last,email,pw,profileComplete:false};
+  users.push(user);
+  localStorage.setItem('nlr_users',JSON.stringify(users));
+  localStorage.setItem('nlr_current',JSON.stringify(user));
+  location.href='onboarding.html';
+}
+
+function doSSO(){
+  const user={id:Date.now(),first:'Demo',last:'User',email:'demo@nlrsummit.com',pw:'',profileComplete:false};
+  localStorage.setItem('nlr_current',JSON.stringify(user));
+  location.href='onboarding.html';
+}
+</script>
+</body>
+</html>
