@@ -22,8 +22,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);height
 .hav img{width:100%;height:100%;object-fit:cover;}
 
 /* BOTTOM NAV */
-.bnav{background:var(--s);border-top:1px solid var(--b);display:flex;flex-shrink:0;padding-bottom:env(safe-area-inset-bottom,0px);}
-.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px 12px;cursor:pointer;border:none;background:transparent;color:var(--t3);font-family:'DM Sans',sans-serif;text-decoration:none;}
+.bnav{background:var(--s);border-top:1px solid var(--b);display:flex;flex-shrink:0;padding-bottom:env(safe-area-inset-bottom,0px);position:relative;z-index:50;}
+.nb,.nb:visited{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px 12px;cursor:pointer;border:none;background:transparent;color:var(--t3);font-family:'DM Sans',sans-serif;text-decoration:none;}
 .nb.on{color:var(--a);}
 .nb span{font-size:10px;font-weight:500;}
 
@@ -35,7 +35,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);height
 .fc.on{background:var(--a);border-color:var(--a);color:#fff;}
 
 /* CARD STACK AREA */
-.stack-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 16px 8px;position:relative;overflow:hidden;}
+.stack-area{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 16px 8px;position:relative;overflow:hidden;z-index:1;}
 
 /* SWIPE HINT LABELS */
 .hint-no{position:absolute;top:36px;left:24px;font-size:22px;font-weight:600;color:var(--re);border:3px solid var(--re);border-radius:8px;padding:4px 12px;opacity:0;transform:rotate(-15deg);pointer-events:none;z-index:20;font-family:'DM Mono',monospace;}
@@ -69,7 +69,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);height
 .mbar.on{background:var(--a);}
 
 /* ACTION BUTTONS */
-.actions{display:flex;align-items:center;justify-content:center;gap:16px;padding:10px 16px 8px;flex-shrink:0;}
+.actions{display:flex;align-items:center;justify-content:center;gap:16px;padding:10px 16px 8px;flex-shrink:0;position:relative;z-index:10;}
 .act-btn{width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;transition:transform .15s,box-shadow .15s;box-shadow:0 2px 8px rgba(0,0,0,.12);}
 .act-btn:active{transform:scale(.92);}
 .btn-no{background:var(--rel);color:var(--re);}
@@ -87,27 +87,46 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);height
 .reset-btn{padding:11px 24px;background:var(--a);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:4px;}
 
 /* MATCH MODAL */
-.match-modal{display:none;position:absolute;inset:0;background:rgba(26,74,46,.92);z-index:500;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px;}
-.match-modal.on{display:flex;animation:fadeIn .3s;}
+.match-modal{display:none;position:absolute;inset:0;background:rgba(26,74,46,.92);z-index:500;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:0;pointer-events:none;}
+.match-modal.on{display:flex;pointer-events:all;animation:fadeIn .3s;}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.match-modal h2{font-size:28px;font-weight:600;color:#fff;text-align:center;}
-.match-modal p{font-size:15px;color:rgba(255,255,255,.75);text-align:center;line-height:1.5;}
+.match-top{display:flex;flex-direction:column;align-items:center;gap:12px;padding:32px 24px 20px;flex-shrink:0;}
+.match-top h2{font-size:26px;font-weight:600;color:#fff;text-align:center;}
+.match-top p{font-size:14px;color:rgba(255,255,255,.75);text-align:center;line-height:1.5;}
 .match-avatars{display:flex;align-items:center;gap:12px;}
-.match-av{width:72px;height:72px;border-radius:50%;border:3px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:600;overflow:hidden;}
+.match-av{width:68px;height:68px;border-radius:50%;border:3px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;overflow:hidden;}
 .match-av img{width:100%;height:100%;object-fit:cover;}
-.match-heart{font-size:28px;}
-.match-modal-btns{display:flex;flex-direction:column;gap:8px;width:100%;}
+.match-heart{font-size:26px;}
+/* Profile sheet inside match modal */
+.mprofile{background:var(--s);border-radius:24px 24px 0 0;width:100%;max-height:72%;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.mph{padding:16px 18px 12px;border-bottom:1px solid var(--b);}
+.mph-row{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+.mph-av{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;flex-shrink:0;overflow:hidden;}
+.mph-av img{width:100%;height:100%;object-fit:cover;}
+.mph-name{font-size:17px;font-weight:600;color:var(--t);}
+.mph-title{font-size:13px;color:var(--t2);margin-top:1px;}
+.mph-org{font-size:13px;color:var(--t2);}
+.mph-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+.mph-type{font-size:11px;font-family:'DM Mono',monospace;padding:3px 9px;border-radius:20px;background:var(--al);color:var(--a);font-weight:500;}
+.mph-sec{font-size:11px;font-family:'DM Mono',monospace;padding:3px 8px;border-radius:4px;background:var(--s2);color:var(--t2);border:1px solid var(--b);}
+.mph-bio{font-size:13px;color:var(--t2);line-height:1.55;margin-top:10px;}
+.mph-goals-lbl{font-size:10px;font-weight:500;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;font-family:'DM Mono',monospace;margin-top:12px;margin-bottom:4px;}
+.mph-goals{font-size:13px;color:var(--t2);line-height:1.5;font-style:italic;}
+.mph-li{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:13px;color:#185FA5;text-decoration:none;}
+.mact{display:flex;gap:8px;padding:14px 18px;border-top:1px solid var(--b);}
+.mabtn{flex:1;padding:12px;border-radius:8px;font-size:13px;font-weight:600;text-align:center;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;}
+.mabtn-pri{background:var(--a);color:#fff;}
+.mabtn-sec{background:var(--s2);color:var(--t);}
+.mbtn-sec{background:rgba(255,255,255,.15);color:#fff;border:none;}
 .mbtn{width:100%;padding:13px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;border:none;text-align:center;}
-.mbtn-pri{background:#fff;color:var(--a);}
-.mbtn-sec{background:rgba(255,255,255,.15);color:#fff;}
 
 /* TOAST */
 .toast{position:absolute;bottom:80px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--t);color:#fff;font-size:13px;font-weight:500;padding:9px 18px;border-radius:24px;white-space:nowrap;opacity:0;transition:all .25s cubic-bezier(.4,0,.2,1);pointer-events:none;z-index:400;}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
 
 /* PREFS SHEET */
-.psheet-overlay{display:none;position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:300;align-items:flex-end;}
-.psheet-overlay.on{display:flex;}
+.psheet-overlay{display:none;position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:300;align-items:flex-end;pointer-events:none;}
+.psheet-overlay.on{display:flex;pointer-events:all;}
 .psheet{background:var(--s);border-radius:20px 20px 0 0;width:100%;max-height:85%;overflow-y:auto;animation:su .28s cubic-bezier(.4,0,.2,1);}
 @keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .psh-handle{width:36px;height:4px;background:var(--bs);border-radius:2px;margin:12px auto 0;}
@@ -177,16 +196,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);height
 
   <!-- MATCH MODAL -->
   <div class="match-modal" id="match-modal">
-    <div class="match-avatars">
-      <div class="match-av" id="mm-you"></div>
-      <div class="match-heart">⚡</div>
-      <div class="match-av" id="mm-them"></div>
-    </div>
-    <h2>It's a match!</h2>
-    <p id="mm-text">You're both interested in meeting each other.</p>
-    <div class="match-modal-btns">
-      <button class="mbtn mbtn-pri" onclick="goRequest()">Send meeting request</button>
+    <div class="match-top">
+      <div class="match-avatars">
+        <div class="match-av" id="mm-you"></div>
+        <div class="match-heart"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17l4 4 4-4"/><path d="M29 17l-4 4-4-4"/><path d="M11 21c0 0 1.5 3 7 3s7-3 7-3"/><path d="M4 13c2-3 5-4 8-3l2 1 2-1c3-1 6 0 8 3"/><path d="M11 13l2 4h10l2-4"/></svg></div>
+        <div class="match-av" id="mm-them"></div>
+      </div>
+      <h2>It's a match!</h2>
+      <p id="mm-text">You're both interested in meeting each other.</p>
       <button class="mbtn mbtn-sec" onclick="closeMatch()">Keep swiping</button>
+    </div>
+    <div class="mprofile">
+      <div class="mph" id="mm-profile"></div>
+      <div class="mact">
+        <div class="mabtn mabtn-sec" onclick="closeMatch()">Skip</div>
+        <div class="mabtn mabtn-pri" onclick="goRequest()">Send meeting request</div>
+      </div>
     </div>
   </div>
 
@@ -212,22 +237,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);height
 
   <!-- BOTTOM NAV -->
   <nav class="bnav">
-    <a class="nb" href="/app">
+    <button class="nb" onclick="window.location.href='/app'">
       <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><circle cx="11" cy="11" r="2.5" fill="currentColor" stroke="none"/><path d="M11 3v2M11 17v2M3 11h2M17 11h2"/></svg>
       <span>Discover</span>
-    </a>
-    <a class="nb on" href="/match">
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M11 19.5S3 14 3 8a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 6-8 11.5-8 11.5z" fill="currentColor" stroke="none" opacity=".15"/><path d="M11 19.5S3 14 3 8a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 6-8 11.5-8 11.5z"/></svg>
+    </button>
+    <button class="nb on" onclick="window.location.href='/match'">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M11 19.5S3 14 3 8a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 6-8 11.5-8 11.5z"/></svg>
       <span>Match</span>
-    </a>
-    <a class="nb" href="/app">
+    </button>
+    <button class="nb" onclick="window.location.href='/app'">
       <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 6h14M4 11h9M4 16h6"/><circle cx="17" cy="16" r="3.5" fill="currentColor" stroke="none"/><path d="M17 14.5v1.5l1 1" stroke="white" stroke-width="1.2"/></svg>
       <span>Requests</span>
-    </a>
-    <a class="nb" href="/app">
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="4" width="16" height="15" rx="2"/><path d="M7 2v4M15 2v4M3 9h16"/></svg>
-      <span>Schedule</span>
-    </a>
+    </button>
+    <button class="nb" onclick="window.location.href='/app'">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="8" r="4"/><path d="M3 20c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+      <span>Profile</span>
+    </button>
   </nav>
 </div>
 
@@ -379,7 +404,7 @@ function processSwipe(dir,att){
     try{localStorage.setItem('nlr_liked',JSON.stringify(liked));}catch(e){}
     // 40% chance of mutual match for demo
     const mutual=Math.random()<0.4;
-    if(mutual){curMatchAtt=att;showMatchModal(att,dir==='up');}
+    if(mutual){curMatchAtt=att;showMatchModal({...att,_score:score(att)},dir==='up');}
     else{showToast(dir==='up'?'Super request sent!':'Request sent to '+att.name.split(' ')[0]);}
   }
   // Shift remaining cards up
@@ -480,11 +505,45 @@ function showMatchModal(att,isSuper){
   const modal=document.getElementById('match-modal');
   const[bg,fg]=att.color;
   const myIni=ME.initials||(ME.first?ME.first[0]+ME.last[0]:'?');
-  document.getElementById('mm-you').innerHTML=ME.photo?`<img src="${ME.photo}" alt="">`:`<span style="color:#fff;">${myIni}</span>`;
-  document.getElementById('mm-you').style.background=ME.photo?'transparent':'rgba(255,255,255,.2)';
-  document.getElementById('mm-them').innerHTML=att.photo?`<img src="${att.photo}" alt="">`:`<span style="color:${fg};">${att.initials}</span>`;
-  document.getElementById('mm-them').style.background=att.photo?'transparent':bg;
-  document.getElementById('mm-text').textContent=isSuper?`You super-liked ${att.name.split(' ')[0]} — and they want to meet you too!`:`You and ${att.name.split(' ')[0]} are both interested in meeting.`;
+
+  // Avatars
+  const mmYou=document.getElementById('mm-you');
+  mmYou.innerHTML=ME.photo?`<img src="${ME.photo}" alt="">`:`<span style="color:#fff;">${myIni}</span>`;
+  mmYou.style.background=ME.photo?'transparent':'rgba(255,255,255,.2)';
+  const mmThem=document.getElementById('mm-them');
+  mmThem.innerHTML=att.photo?`<img src="${att.photo}" alt="">`:`<span style="color:${fg};">${att.initials}</span>`;
+  mmThem.style.background=att.photo?'transparent':bg;
+
+  document.getElementById('mm-text').textContent=isSuper
+    ?`You super-liked ${att.name.split(' ')[0]} — and they want to meet you too!`
+    :`You and ${att.name.split(' ')[0]} are both interested in meeting.`;
+
+  // Full profile sheet
+  const sc=att._score||score(att);
+  const maxScore=10;const bars=Math.min(5,Math.round((sc/maxScore)*5));
+  const prof=document.getElementById('mm-profile');
+  prof.innerHTML=`
+    <div class="mph-row">
+      <div class="mph-av" style="background:${bg};color:${fg};">${att.photo?`<img src="${att.photo}" alt="">`:att.initials}</div>
+      <div>
+        <div class="mph-name">${att.name}</div>
+        <div class="mph-title">${att.title||att.type}</div>
+        <div class="mph-org">${att.org}</div>
+      </div>
+    </div>
+    <div class="mph-tags">
+      <span class="mph-type">${att.type}</span>
+      ${att.sectors.map(s=>`<span class="mph-sec">${s}</span>`).join('')}
+    </div>
+    ${att.bio?`<div class="mph-bio">${att.bio}</div>`:''}
+    ${att.goals?`<div class="mph-goals-lbl">Looking for at Summit</div><div class="mph-goals">${att.goals}</div>`:''}
+    ${att.linkedin?`<a class="mph-li" href="${att.linkedin}" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>LinkedIn profile</a>`:''}
+    <div class="card-match" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--b);">
+      <span class="match-label">Match score</span>
+      <div class="match-bars">${Array.from({length:5},(_,i)=>`<div class="mbar${i<bars?' on':''}"></div>`).join('')}</div>
+      <span style="font-size:11px;color:var(--t3);font-family:'DM Mono',monospace;margin-left:4px;">${sc} pts</span>
+    </div>`;
+
   modal.classList.add('on');
 }
 
