@@ -132,7 +132,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);height
 .prfe.ta{resize:none;line-height:1.5;}
 .savebtn{width:100%;padding:12px;background:var(--a);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:4px;}
 .logbtn{width:100%;padding:11px;background:transparent;color:var(--re);border:1px solid var(--rel);border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:8px;}
-.mo{display:none;position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:flex-end;}
+.mo{display:none;position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:300;align-items:flex-end;pointer-events:all;}
 .mo.on{display:flex;}
 .ms{background:var(--s);border-radius:20px 20px 0 0;width:100%;max-height:80%;overflow-y:auto;animation:su .28s cubic-bezier(.4,0,.2,1);}
 @keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
@@ -256,6 +256,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);height
     <button class="nb on" id="nb-discover" onclick="navTo('discover')">
       <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><circle cx="11" cy="11" r="2.5" fill="currentColor" stroke="none"/><path d="M11 3v2M11 17v2M3 11h2M17 11h2"/></svg>
       <span>Discover</span>
+    </button>
+    <button class="nb" onclick="window.location.href='/match'">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M11 19.5S3 14 3 8a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 6-8 11.5-8 11.5z"/></svg>
+      <span>Match</span>
     </button>
     <button class="nb" id="nb-requests" onclick="navTo('requests')">
       <div class="nbdot" id="rdot"></div>
@@ -473,6 +477,8 @@ function renderProfile(){
   const ini=ME.initials||(ME.first?ME.first[0]+ME.last[0]:'?');
   const nm=ME.name||(ME.first+' '+ME.last);
   const selSec=new Set(ME.sectors||[]);
+  const selLF=new Set(ME.lookingFor||[]);
+  const selII=new Set(ME.interestedIn||[]);
   wrap.innerHTML=`<div class="prh">
     <div class="prav">${ME.photo?`<img src="${ME.photo}" alt="">`:`<span>${ini}</span>`}<input type="file" accept="image/*" onchange="handlePrPh(this)"></div>
     <div class="prn">${nm}</div>
@@ -483,8 +489,10 @@ function renderProfile(){
     <div class="prfd"><div class="prfl">Job title</div><input class="prfe" id="pr-t" value="${ME.title||''}" placeholder="Your job title"></div>
     <div class="prfd"><div class="prfl">Company</div><input class="prfe" id="pr-c" value="${ME.company||''}" placeholder="Your organization"></div>
     <div class="prfd"><div class="prfl">Location</div><input class="prfe" id="pr-l" value="${ME.location||''}" placeholder="e.g. Denver, CO"></div>
-    <div class="prfd"><div class="prfl">Attendee type</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;" id="pr-types"></div></div>
-    <div class="prfd"><div class="prfl">Focus sectors <span style="text-transform:none;font-family:'DM Sans',sans-serif;font-size:10px;color:var(--t3);">(up to 4)</span></div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;" id="pr-secs"></div></div>
+    <div class="prfd"><div class="prfl">I am a</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;" id="pr-types"></div></div>
+    <div class="prfd"><div class="prfl">My focus sectors</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;" id="pr-secs"></div></div>
+    <div class="prfd" style="border:2px solid var(--al);"><div class="prfl" style="color:var(--a);">Looking to meet</div><div style="font-size:12px;color:var(--t3);margin-bottom:8px;">Who do you want to connect with at Summit?</div><div style="display:flex;flex-wrap:wrap;gap:6px;" id="pr-lf"></div></div>
+    <div class="prfd" style="border:2px solid var(--al);"><div class="prfl" style="color:var(--a);">Tech areas I'm interested in</div><div style="font-size:12px;color:var(--t3);margin-bottom:8px;">Drives your match score — select all that apply.</div><div style="display:flex;flex-wrap:wrap;gap:6px;" id="pr-ii"></div></div>
     <div class="prfd"><div class="prfl">Bio</div><textarea class="prfe ta" id="pr-b" rows="4" placeholder="Tell attendees about yourself…">${ME.bio||''}</textarea></div>
     <div class="prfd"><div class="prfl">Summit goals</div><textarea class="prfe ta" id="pr-g" rows="3" placeholder="What are you hoping to achieve?">${ME.goals||''}</textarea></div>
     <div class="prfd"><div class="prfl">LinkedIn</div><input class="prfe" id="pr-li" type="url" value="${ME.linkedin||''}" placeholder="https://linkedin.com/in/…"></div>
@@ -493,27 +501,43 @@ function renderProfile(){
     <div style="height:24px;"></div>
   </div>`;
 
-  const tp=document.getElementById('pr-types');
-  TYP.forEach(t=>{const d=document.createElement('div');const on=ME.type===t;
-    d.style.cssText=`padding:7px 13px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid ${on?'var(--a)':'var(--bs)'};background:${on?'var(--a)':'var(--s)'};color:${on?'#fff':'var(--t2)'};`;
-    d.textContent=t;
-    d.onclick=()=>{ME.type=t;tp.querySelectorAll('div').forEach(x=>{x.style.background='var(--s)';x.style.borderColor='var(--bs)';x.style.color='var(--t2)';});d.style.background='var(--a)';d.style.borderColor='var(--a)';d.style.color='#fff';};
-    tp.appendChild(d);});
+  function makePills(containerId, items, activeSet, multi, onChange){
+    const c=document.getElementById(containerId);
+    items.forEach(item=>{
+      const d=document.createElement('div');const on=activeSet.has(item);
+      d.style.cssText=`padding:7px 13px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid ${on?'var(--a)':'var(--bs)'};background:${on?'var(--a)':'var(--s)'};color:${on?'#fff':'var(--t2)'};margin-bottom:2px;`;
+      d.textContent=item;
+      d.onclick=()=>{
+        if(multi){
+          if(activeSet.has(item)){activeSet.delete(item);d.style.background='var(--s)';d.style.borderColor='var(--bs)';d.style.color='var(--t2)';}
+          else{activeSet.add(item);d.style.background='var(--a)';d.style.borderColor='var(--a)';d.style.color='#fff';}
+        } else {
+          activeSet.clear();c.querySelectorAll('div').forEach(x=>{x.style.background='var(--s)';x.style.borderColor='var(--bs)';x.style.color='var(--t2)';});
+          activeSet.add(item);d.style.background='var(--a)';d.style.borderColor='var(--a)';d.style.color='#fff';
+        }
+        onChange([...activeSet]);
+      };
+      c.appendChild(d);
+    });
+  }
 
-  const sp=document.getElementById('pr-secs');
-  SEC.forEach(s=>{const d=document.createElement('div');const on=selSec.has(s);
-    d.style.cssText=`padding:7px 13px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid ${on?'var(--a)':'var(--bs)'};background:${on?'var(--a)':'var(--s)'};color:${on?'#fff':'var(--t2)'};`;
-    d.textContent=s;
-    d.onclick=()=>{if(selSec.has(s)){selSec.delete(s);d.style.background='var(--s)';d.style.borderColor='var(--bs)';d.style.color='var(--t2)';}else if(selSec.size<4){selSec.add(s);d.style.background='var(--a)';d.style.borderColor='var(--a)';d.style.color='#fff';}ME.sectors=[...selSec];};
-    sp.appendChild(d);});
+  makePills('pr-types', TYP, new Set([ME.type].filter(Boolean)), false, v=>{ME.type=v[0]||'';});
+  makePills('pr-secs', SEC, selSec, true, v=>{ME.sectors=v;});
+  makePills('pr-lf', TYP, selLF, true, v=>{ME.lookingFor=v;});
+  makePills('pr-ii', SEC, selII, true, v=>{ME.interestedIn=v;});
 }
 
 function handlePrPh(input){const file=input.files[0];if(!file)return;const r=new FileReader();r.onload=e=>{ME.photo=e.target.result;saveMe();renderProfile();updHdr();};r.readAsDataURL(file);}
 
 function savePr(){
-  ME.title=document.getElementById('pr-t').value.trim();ME.company=document.getElementById('pr-c').value.trim();
-  ME.location=document.getElementById('pr-l').value.trim();ME.bio=document.getElementById('pr-b').value.trim();
-  ME.goals=document.getElementById('pr-g').value.trim();ME.linkedin=document.getElementById('pr-li').value.trim();
+  ME.title=document.getElementById('pr-t').value.trim();
+  ME.company=document.getElementById('pr-c').value.trim();
+  ME.location=document.getElementById('pr-l').value.trim();
+  ME.bio=document.getElementById('pr-b').value.trim();
+  ME.goals=document.getElementById('pr-g').value.trim();
+  ME.linkedin=document.getElementById('pr-li').value.trim();
+  // lookingFor, interestedIn, type, sectors updated live via pill clicks
+  localStorage.setItem('nlr_match_prefs',JSON.stringify({lookingFor:ME.lookingFor||[],interestedIn:ME.interestedIn||[]}));
   saveMe();renderProfile();updHdr();showToast('Profile saved');
 }
 
