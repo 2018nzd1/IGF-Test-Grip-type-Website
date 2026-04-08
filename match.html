@@ -124,6 +124,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);height
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
 
 /* PREFS SHEET */
+.req-modal-overlay{display:none;position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:600;align-items:flex-end;}
+.req-modal-overlay.on{display:flex;}
 .psheet-overlay{display:none;position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:300;align-items:flex-end;pointer-events:none;}
 .psheet-overlay.on{display:flex;pointer-events:all;}
 .psheet{background:var(--s);border-radius:20px 20px 0 0;width:100%;max-height:85%;overflow-y:auto;animation:su .28s cubic-bezier(.4,0,.2,1);}
@@ -232,6 +234,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);height
     </div>
   </div>
 
+  <!-- REQUEST MODAL -->
+  <div id="req-modal" class="req-modal-overlay">
+    <div style="background:var(--s);border-radius:20px 20px 0 0;width:100%;max-height:85%;overflow-y:auto;animation:su .28s cubic-bezier(.4,0,.2,1);">
+      <div style="width:36px;height:4px;background:var(--bs);border-radius:2px;margin:12px auto 0;"></div>
+      <div style="padding:14px 18px 10px;border-bottom:1px solid var(--b);">
+        <h3 id="req-modal-name" style="font-size:16px;font-weight:600;color:var(--t);"></h3>
+        <p style="font-size:13px;color:var(--t2);margin-top:3px;">Select your preferred slot(s)</p>
+      </div>
+      <div id="req-modal-body" style="padding:14px 18px;"></div>
+      <div style="padding:0 18px 24px;">
+        <textarea id="req-modal-note" rows="2" style="width:100%;padding:9px 11px;font-size:13px;font-family:'DM Sans',sans-serif;border:1px solid var(--bs);border-radius:8px;background:var(--s2);color:var(--t);resize:none;outline:none;margin-bottom:12px;" placeholder="Add a short note (optional)…"></textarea>
+        <button onclick="sendMatchReq()" style="width:100%;padding:13px;background:var(--a);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:8px;">Send request</button>
+        <div onclick="closeReqModal()" style="text-align:center;font-size:13px;color:var(--t3);cursor:pointer;padding:6px;">Cancel</div>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 
   <!-- BOTTOM NAV -->
@@ -287,6 +306,17 @@ if(!ATTS){
 
 const ME=JSON.parse(localStorage.getItem('nlr_current')||'null');
 if(!ME)location.href="/";
+
+// Sessions for meeting scheduling
+const SESS=[
+  {id:'d1m',label:'Day 1 morning',time:'9:30 AM – 12:00 PM',slots:mkSlots(9,30,12,0)},
+  {id:'d1e',label:'Day 1 evening',time:'4:00 PM – 9:00 PM',slots:mkSlots(16,0,21,0)},
+  {id:'d2m',label:'Day 2 morning',time:'10:00 AM – 1:00 PM',slots:mkSlots(10,0,13,0)}
+];
+function mkSlots(sh,sm,eh,em){const o=[];let h=sh,m=sm,i=0;while(h<eh||(h===eh&&m<em)){const ap=h>=12?'PM':'AM',dh=h>12?h-12:h===0?12:h;o.push({id:i++,label:`${dh}:${m<10?'0'+m:m} ${ap}`});m+=15;if(m>=60){m-=60;h++;}}return o;}
+const YOU_SCHED={};SESS.forEach(s=>{YOU_SCHED[s.id]=new Set();});
+const OUTGOING=JSON.parse(localStorage.getItem('nlr_outgoing')||'[]');
+let pendSlots=[],reqTarget=null;
 
 // Prefs: what ME is looking for
 let myPrefs=JSON.parse(localStorage.getItem('nlr_match_prefs')||'null')||{lookingFor:[...TYPES],interestedIn:[...SECTORS]};
@@ -553,12 +583,55 @@ function showMatchModal(att,isSuper){
 function closeMatch(){document.getElementById('match-modal').classList.remove('on');curMatchAtt=null;}
 
 function goRequest(){
-  closeMatch();
-  if(curMatchAtt){
-    localStorage.setItem('nlr_open_profile',JSON.stringify({id:curMatchAtt.id,name:curMatchAtt.name}));
-  }
-  location.href='/app';
+  if(!curMatchAtt)return;
+  reqTarget=curMatchAtt;
+  pendSlots=[];
+  document.getElementById('req-modal-name').textContent='Request meeting with '+reqTarget.name.split(' ')[0];
+  document.getElementById('req-modal-note').value='';
+  const body=document.getElementById('req-modal-body');body.innerHTML='';
+  let anyFree=false;
+  // Build slot picker — att.schedule may not have Set so treat as array
+  SESS.forEach(s=>{
+    const attBusy=new Set(Array.isArray(reqTarget.schedule?.[s.id])?reqTarget.schedule[s.id]:(reqTarget.schedule?.[s.id]?[...reqTarget.schedule[s.id]]:[]));
+    const free=s.slots.filter(sl=>!attBusy.has(sl.id)&&!YOU_SCHED[s.id].has(sl.id));
+    if(!free.length)return;anyFree=true;
+    const sec=document.createElement('div');sec.style.marginBottom='14px';
+    sec.innerHTML=`<div style="font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);font-family:'DM Mono',monospace;margin-bottom:7px;">${s.label} · ${s.time}</div><div style="display:flex;flex-wrap:wrap;gap:6px;" id="rms-${s.id}"></div>`;
+    body.appendChild(sec);
+    const sg=sec.querySelector(`#rms-${s.id}`);
+    free.forEach(sl=>{
+      const d=document.createElement('div');
+      d.style.cssText='padding:7px 11px;font-size:11px;font-family:"DM Mono",monospace;border-radius:6px;cursor:pointer;border:1px solid var(--bs);background:var(--s2);color:var(--t);';
+      d.textContent=sl.label;
+      const k=s.id+':'+sl.id;
+      d.onclick=()=>{
+        if(pendSlots.includes(k)){pendSlots=pendSlots.filter(x=>x!==k);d.style.background='var(--s2)';d.style.borderColor='var(--bs)';d.style.color='var(--t)';}
+        else{pendSlots.push(k);d.style.background='var(--a)';d.style.borderColor='var(--a)';d.style.color='#fff';}
+      };
+      sg.appendChild(d);
+    });
+  });
+  if(!anyFree)body.innerHTML='<div style="font-size:14px;color:var(--t2);padding:8px 0;">No overlapping free slots found.</div>';
+  document.getElementById('match-modal').classList.remove('on');
+  document.getElementById('req-modal').classList.add('on');
 }
+
+function sendMatchReq(){
+  if(!pendSlots.length){showToast('Pick at least one slot');return;}
+  const[sid,slotId]=pendSlots[0].split(':');
+  const sess=SESS.find(s=>s.id===sid),slot=sess.slots.find(s=>s.id===parseInt(slotId));
+  const note=document.getElementById('req-modal-note').value.trim();
+  const req={attId:reqTarget.id,attName:reqTarget.name,sess:{id:sess.id,label:sess.label},slot:{id:slot.id,label:slot.label},note,status:'pending'};
+  const existing=JSON.parse(localStorage.getItem('nlr_outgoing')||'[]');
+  existing.push(req);
+  localStorage.setItem('nlr_outgoing',JSON.stringify(existing));
+  YOU_SCHED[sid].add(parseInt(slotId));
+  document.getElementById('req-modal').classList.remove('on');
+  showToast('Request sent to '+reqTarget.name.split(' ')[0]+'!');
+  reqTarget=null;pendSlots=[];
+}
+
+function closeReqModal(){document.getElementById('req-modal').classList.remove('on');}
 
 // ── PREFS ──
 function openPrefs(){
