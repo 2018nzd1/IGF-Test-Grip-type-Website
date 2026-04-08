@@ -189,13 +189,13 @@ function doSignup(){
   users.push(user);
   localStorage.setItem('nlr_users',JSON.stringify(users));
   localStorage.setItem('nlr_current',JSON.stringify(user));
-  location.href='onboarding.html';
+  location.href="/onboarding";
 }
 
 function doSSO(){
   const user={id:Date.now(),first:'Demo',last:'User',email:'demo@nlrsummit.com',pw:'',profileComplete:false};
   localStorage.setItem('nlr_current',JSON.stringify(user));
-  location.href='onboarding.html';
+  location.href="/onboarding";
 }
 </script>
 </body>
