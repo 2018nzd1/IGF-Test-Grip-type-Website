@@ -58,8 +58,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);height
 .c-gy{background:var(--s2);color:var(--t2);border:1px solid var(--b);}
 .sb{width:33px;height:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid var(--b);background:var(--s2);flex-shrink:0;}
 .sb.on{background:var(--aml);border-color:#e8b060;}
-.det{display:none;flex-direction:column;position:absolute;inset:0;background:var(--bg);z-index:100;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);}
-.det.on{display:flex;transform:translateX(0);}
+.det{display:flex;flex-direction:column;position:absolute;inset:0;background:var(--bg);z-index:100;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);pointer-events:none;}
+.det.on{transform:translateX(0);pointer-events:all;}
 .dtop{background:var(--s);border-bottom:1px solid var(--b);padding:14px 16px;flex-shrink:0;}
 .bk{display:flex;align-items:center;gap:5px;font-size:14px;font-weight:500;color:var(--a);cursor:pointer;border:none;background:transparent;font-family:'DM Sans',sans-serif;}
 .dpro{background:var(--s);padding:16px;border-bottom:1px solid var(--b);flex-shrink:0;}
@@ -351,7 +351,8 @@ function togStar(id){const a=ATTS.find(x=>x.id===id);if(!a)return;a.preferred=!a
 
 function openDet(att){
   selA=att;
-  const det=document.getElementById('det');det.style.display='flex';setTimeout(()=>det.classList.add('on'),10);
+  const det=document.getElementById('det');
+  det.classList.add('on');
   const[bg,fg]=att.color;
   const dav=document.getElementById('d-av');dav.style.cssText=`width:58px;height:58px;font-size:19px;font-weight:600;background:${bg};color:${fg};`;dav.textContent=att.initials;
   document.getElementById('d-name').textContent=att.name;
@@ -362,7 +363,7 @@ function openDet(att){
   updStarDet();renderDetSl();
 }
 
-function closeDet(){const det=document.getElementById('det');det.classList.remove('on');setTimeout(()=>{det.style.display='none';selA=null;},280);renderList();}
+function closeDet(){const det=document.getElementById('det');det.classList.remove('on');selA=null;renderList();}
 
 function updStarDet(){if(!selA)return;const b=document.getElementById('d-star');b.textContent=selA.preferred?'Remove preferred':'Add to preferred';b.className='da'+(selA.preferred?' sta':'');}
 function togStarDet(){if(!selA)return;selA.preferred=!selA.preferred;updStarDet();updHdr();}
