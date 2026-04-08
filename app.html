@@ -563,6 +563,16 @@ function navTo(n){
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2800);}
 
 updHdr();renderList();
+
+// Auto-open profile if coming from a match
+(function checkMatchRedirect(){
+  const stored=localStorage.getItem('nlr_open_profile');
+  if(!stored)return;
+  localStorage.removeItem('nlr_open_profile');
+  const id=JSON.parse(stored);
+  const att=ATTS.find(a=>a.id===id);
+  if(att)setTimeout(()=>openDet(att),300);
+})();
 </script>
 </body>
 </html>
