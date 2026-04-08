@@ -555,7 +555,7 @@ function closeMatch(){document.getElementById('match-modal').classList.remove('o
 function goRequest(){
   closeMatch();
   if(curMatchAtt){
-    localStorage.setItem('nlr_open_profile',JSON.stringify(curMatchAtt.id));
+    localStorage.setItem('nlr_open_profile',JSON.stringify({id:curMatchAtt.id,name:curMatchAtt.name}));
   }
   location.href='/app';
 }
