@@ -569,9 +569,12 @@ updHdr();renderList();
   const stored=localStorage.getItem('nlr_open_profile');
   if(!stored)return;
   localStorage.removeItem('nlr_open_profile');
-  const id=JSON.parse(stored);
-  const att=ATTS.find(a=>a.id===id);
-  if(att)setTimeout(()=>openDet(att),300);
+  const data=JSON.parse(stored);
+  const id=typeof data==='object'?parseInt(data.id):parseInt(data);
+  const name=typeof data==='object'?data.name:null;
+  let att=ATTS.find(a=>a.id===id);
+  if(!att&&name)att=ATTS.find(a=>a.name===name);
+  if(att)setTimeout(()=>openDet(att),500);
 })();
 </script>
 </body>
