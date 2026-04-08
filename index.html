@@ -137,14 +137,40 @@ function setE(id,on){
 function alert2(id,msg){const e=document.getElementById(id);e.textContent=msg;e.classList.add('on');}
 function clearAlert(id){document.getElementById(id).classList.remove('on');}
 
+// Seed demo account on every load
+(function seedDemo(){
+  const DEMO={
+    id:9999,
+    first:'Ian',last:'Gorski-Findlay',
+    email:'igf@nlr.gov',pw:'Password101',
+    name:'Ian Gorski-Findlay',
+    initials:'IG',
+    profileComplete:true,
+    title:'Startup Relations Specialist',
+    company:'National Laboratory of the Rockies',
+    location:'Golden, CO',
+    linkedin:'https://linkedin.com/in/igorskifindlay',
+    type:'Ecosystem Partner',
+    sectors:['Energy Storage','Grid Technology','Solar','Hydrogen'],
+    lookingFor:['Startup','Investor','Corporate'],
+    interestedIn:['Energy Storage','Grid Technology','Hydrogen','CCUS','Solar'],
+    bio:'I work at NLR connecting startups with national lab resources, expertise, and partnership opportunities across the clean energy spectrum. Always looking to meet founders and investors working on hard grid and storage problems.',
+    goals:'Connect early-stage startups with NLR commercialization pathways. Meet investors active in the Mountain West energy space.'
+  };
+  const users=JSON.parse(localStorage.getItem('nlr_users')||'[]');
+  const idx=users.findIndex(u=>u.email===DEMO.email);
+  if(idx>=0)users[idx]=DEMO;else users.push(DEMO);
+  localStorage.setItem('nlr_users',JSON.stringify(users));
+})();
+
 function doLogin(){
   clearAlert('la');
-  const email=v('le'),pw=v('lp');
+  const email=v('le').toLowerCase(),pw=v('lp');
   setE('lee',!email||!email.includes('@'));
   setE('lpe',!pw);
   if(!email||!email.includes('@')||!pw)return;
   const users=JSON.parse(localStorage.getItem('nlr_users')||'[]');
-  const user=users.find(u=>u.email===email&&u.pw===pw);
+  const user=users.find(u=>u.email.toLowerCase()===email&&u.pw===pw);
   if(!user){alert2('la','Email or password not found.');return;}
   localStorage.setItem('nlr_current',JSON.stringify(user));
   location.href=user.profileComplete?'app.html':'onboarding.html';
