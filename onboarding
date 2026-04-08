@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Set up your profile</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f4f0;--s:#fff;--s2:#f0efe9;--bs:rgba(0,0,0,.18);--b:rgba(0,0,0,.1);--t:#1a1a18;--t2:#5a5a52;--t3:#9a9a8e;--a:#1a4a2e;--r:#b83030;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-height:100vh;}
+.shell{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;background:var(--bg);}
+@media(min-width:768px){body{background:#dddcd6;display:flex;align-items:center;justify-content:center;}
+.shell{max-width:420px;min-height:820px;border-radius:32px;overflow:hidden;box-shadow:0 12px 60px rgba(0,0,0,.22);margin:32px 0;}}
+.topbar{background:var(--a);padding:52px 20px 16px;flex-shrink:0;}
+@media(min-width:768px){.topbar{padding-top:24px;}}
+.eye{font-size:11px;font-family:'DM Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:4px;}
+.topbar h1{font-size:20px;font-weight:600;color:#fff;}
+.topbar p{font-size:13px;color:rgba(255,255,255,.6);margin-top:3px;}
+.prog{display:flex;gap:4px;margin-top:14px;}
+.ps{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.2);transition:background .3s;}
+.ps.done{background:#fff;}.ps.active{background:rgba(255,255,255,.6);}
+.body{flex:1;overflow-y:auto;padding:24px 20px 110px;-webkit-overflow-scrolling:touch;}
+.step{display:none;flex-direction:column;}
+.step.on{display:flex;}
+.stitle{font-size:17px;font-weight:600;margin-bottom:4px;}
+.ssub{font-size:13px;color:var(--t3);margin-bottom:20px;}
+.fg{margin-bottom:15px;}
+label{display:block;font-size:11px;font-weight:500;color:var(--t3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;font-family:'DM Mono',monospace;}
+input,textarea,select{width:100%;padding:11px 13px;font-size:14px;font-family:'DM Sans',sans-serif;border:1px solid var(--bs);border-radius:8px;background:var(--s);color:var(--t);outline:none;transition:border-color .2s;appearance:none;-webkit-appearance:none;}
+input:focus,textarea:focus,select:focus{border-color:var(--a);}
+input.err,select.err{border-color:var(--r);}
+textarea{resize:none;line-height:1.5;}
+.selw{position:relative;}
+.selw::after{content:'';position:absolute;right:13px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--t3);pointer-events:none;}
+.errmsg{font-size:12px;color:var(--r);margin-top:3px;display:none;}
+.errmsg.on{display:block;}
+.hint{font-size:12px;color:var(--t3);margin-top:3px;}
+.photo-area{display:flex;flex-direction:column;align-items:center;gap:14px;margin-bottom:20px;}
+.pring{width:96px;height:96px;border-radius:50%;background:var(--s2);border:2px dashed var(--bs);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;position:relative;}
+.pring img{width:100%;height:100%;object-fit:cover;display:none;}
+.picon{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--t3);}
+.picon span{font-size:11px;font-family:'DM Mono',monospace;}
+.pring input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.pbtn{padding:8px 16px;border:1px solid var(--bs);border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;background:var(--s);color:var(--t);font-family:'DM Sans',sans-serif;}
+.pbtn:active{background:var(--s2);}
+.pill-group{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px;}
+.pill{padding:8px 14px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--bs);background:var(--s);color:var(--t2);transition:all .15s;user-select:none;}
+.pill.on{background:var(--a);border-color:var(--a);color:#fff;}
+.abar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--s);border-top:1px solid var(--b);padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;z-index:50;}
+@media(min-width:768px){.abar{max-width:420px;}}
+.bbk{padding:12px 20px;border:1px solid var(--bs);border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;background:transparent;color:var(--t);font-family:'DM Sans',sans-serif;}
+.bnx{flex:1;padding:12px;background:var(--a);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.bnx:active{opacity:.85;}
+.bsk{font-size:13px;color:var(--t3);cursor:pointer;padding:12px 4px;text-align:center;white-space:nowrap;}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="topbar">
+    <div class="eye">NLR Summit 2026</div>
+    <h1>Set up your profile</h1>
+    <p>Help other attendees find and connect with you.</p>
+    <div class="prog" id="prog"></div>
+  </div>
+
+  <div class="body" id="body">
+
+    <!-- S0: Photo -->
+    <div class="step on" id="s0">
+      <div class="stitle">Add a profile photo</div>
+      <div class="ssub">A photo helps people recognise you on the floor.</div>
+      <div class="photo-area">
+        <div class="pring" id="pring">
+          <img id="pimg" alt="Profile photo">
+          <div class="picon" id="picon">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="10" r="5" stroke="#9a9a8e" stroke-width="1.5"/><path d="M4 24c0-5.5 4.5-10 10-10s10 4.5 10 10" stroke="#9a9a8e" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <span>Upload photo</span>
+          </div>
+          <input type="file" accept="image/*" onchange="handlePhoto(this)">
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="pbtn" onclick="document.querySelector('#pring input').click()">Choose photo</button>
+          <button class="pbtn" id="rmbtn" style="display:none;color:var(--r);" onclick="removePhoto()">Remove</button>
+        </div>
+      </div>
+      <div class="hint" style="text-align:center;">JPG or PNG · Max 5MB · Square crops best</div>
+    </div>
+
+    <!-- S1: Basic info -->
+    <div class="step" id="s1">
+      <div class="stitle">Basic information</div>
+      <div class="ssub">This appears on your public profile card.</div>
+      <div class="fg">
+        <label>Job title</label>
+        <input id="f-title" type="text" placeholder="e.g. Partner, CEO, Program Manager">
+        <div class="errmsg" id="f-title-e">Please enter your job title.</div>
+      </div>
+      <div class="fg">
+        <label>Company / Organization</label>
+        <input id="f-company" type="text" placeholder="e.g. Vectra Renewables">
+        <div class="errmsg" id="f-company-e">Please enter your organization.</div>
+      </div>
+      <div class="fg">
+        <label>Location <span style="text-transform:none;font-family:'DM Sans',sans-serif;font-size:10px;">(optional)</span></label>
+        <input id="f-loc" type="text" placeholder="e.g. Denver, CO">
+      </div>
+      <div class="fg">
+        <label>LinkedIn URL <span style="text-transform:none;font-family:'DM Sans',sans-serif;font-size:10px;">(optional)</span></label>
+        <input id="f-li" type="url" placeholder="https://linkedin.com/in/yourname">
+      </div>
+    </div>
+
+    <!-- S2: Attendee type -->
+    <div class="step" id="s2">
+      <div class="stitle">How are you attending?</div>
+      <div class="ssub">Select the option that best describes your role at Summit.</div>
+      <div class="pill-group" id="type-pills"></div>
+      <div class="errmsg" id="type-e" style="margin-top:10px;">Please select your attendee type.</div>
+    </div>
+
+    <!-- S3: Sectors -->
+    <div class="step" id="s3">
+      <div class="stitle">Your focus areas</div>
+      <div class="ssub">Select up to 4 sectors you work in or are interested in.</div>
+      <div class="pill-group" id="sector-pills"></div>
+      <div class="errmsg" id="sector-e" style="margin-top:10px;">Please select at least one sector.</div>
+    </div>
+
+    <!-- S4: Bio -->
+    <div class="step" id="s4">
+      <div class="stitle">About you</div>
+      <div class="ssub">A short bio helps others decide if they want to connect.</div>
+      <div class="fg">
+        <label>Bio <span style="text-transform:none;font-family:'DM Sans',sans-serif;font-size:10px;">(optional)</span></label>
+        <textarea id="f-bio" rows="4" placeholder="e.g. I lead deal flow for early-stage clean energy startups across the Rocky Mountain region…"></textarea>
+        <div class="hint" id="bio-cnt">0 / 280 characters</div>
+      </div>
+      <div class="fg">
+        <label>What are you hoping to get from Summit? <span style="text-transform:none;font-family:'DM Sans',sans-serif;font-size:10px;">(optional)</span></label>
+        <textarea id="f-goals" rows="3" placeholder="e.g. Meet potential co-investors, find portfolio companies, explore partnerships…"></textarea>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="abar">
+    <button class="bbk" id="bbk" onclick="prev()" style="display:none;">Back</button>
+    <button class="bnx" id="bnx" onclick="next()">Continue</button>
+    <div class="bsk" id="bsk" onclick="skip()">Skip</div>
+  </div>
+</div>
+
+<script>
+const NTYPES=['Startup','Investor','Accelerator / Incubator','Ecosystem Partner','Corporate','Government / Policy','Nonprofit','University / Research','Media'];
+const NSECTORS=['Solar','Wind','Energy Storage','Grid Technology','Hydrogen','CCUS','Electric Vehicles','Energy Efficiency','Nuclear','Biomass','Geothermal','Offshore Wind','Smart Buildings','Water Technology','ESG / Impact','Project Finance'];
+const SKIPPABLE=[0,4];
+const NSTEPS=5;
+let cur=0, selType=null, selSectors=new Set();
+const prof={};
+
+const user=JSON.parse(localStorage.getItem('nlr_current')||'null');
+if(!user)location.href='index.html';
+
+function renderProg(){
+  const p=document.getElementById('prog');p.innerHTML='';
+  for(let i=0;i<NSTEPS;i++){const d=document.createElement('div');d.className='ps'+(i<cur?' done':i===cur?' active':'');p.appendChild(d);}
+}
+
+function buildPills(){
+  const tp=document.getElementById('type-pills');
+  NTYPES.forEach(t=>{
+    const d=document.createElement('div');d.className='pill';d.textContent=t;
+    d.onclick=()=>{selType=t;tp.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));d.classList.add('on');document.getElementById('type-e').classList.remove('on');};
+    tp.appendChild(d);
+  });
+  const sp=document.getElementById('sector-pills');
+  NSECTORS.forEach(s=>{
+    const d=document.createElement('div');d.className='pill';d.textContent=s;
+    d.onclick=()=>{
+      if(selSectors.has(s)){selSectors.delete(s);d.classList.remove('on');}
+      else if(selSectors.size<4){selSectors.add(s);d.classList.add('on');}
+    };
+    sp.appendChild(d);
+  });
+}
+
+function showStep(n){
+  document.querySelectorAll('.step').forEach((s,i)=>s.classList.toggle('on',i===n));
+  document.getElementById('bbk').style.display=n>0?'block':'none';
+  document.getElementById('bnx').textContent=n===NSTEPS-1?'Finish':'Continue';
+  document.getElementById('bsk').style.display=SKIPPABLE.includes(n)?'block':'none';
+  document.getElementById('body').scrollTop=0;
+  renderProg();
+}
+
+function validate(){
+  if(cur===1){
+    const t=document.getElementById('f-title').value.trim();
+    const c=document.getElementById('f-company').value.trim();
+    document.getElementById('f-title-e').classList.toggle('on',!t);
+    document.getElementById('f-title').classList.toggle('err',!t);
+    document.getElementById('f-company-e').classList.toggle('on',!c);
+    document.getElementById('f-company').classList.toggle('err',!c);
+    return !!(t&&c);
+  }
+  if(cur===2){const ok=!!selType;document.getElementById('type-e').classList.toggle('on',!ok);return ok;}
+  if(cur===3){const ok=selSectors.size>0;document.getElementById('sector-e').classList.toggle('on',!ok);return ok;}
+  return true;
+}
+
+function saveStep(){
+  if(cur===0){const img=document.getElementById('pimg');if(img.style.display!=='none')prof.photo=img.src;}
+  if(cur===1){prof.title=document.getElementById('f-title').value.trim();prof.company=document.getElementById('f-company').value.trim();prof.location=document.getElementById('f-loc').value.trim();prof.linkedin=document.getElementById('f-li').value.trim();}
+  if(cur===2){prof.type=selType;}
+  if(cur===3){prof.sectors=[...selSectors];}
+  if(cur===4){prof.bio=document.getElementById('f-bio').value.trim();prof.goals=document.getElementById('f-goals').value.trim();}
+}
+
+function next(){if(!validate())return;saveStep();if(cur===NSTEPS-1){finish();return;}cur++;showStep(cur);}
+function prev(){if(cur>0){cur--;showStep(cur);}}
+function skip(){saveStep();if(cur===NSTEPS-1){finish();return;}cur++;showStep(cur);}
+
+function finish(){
+  const updated={...user,...prof,profileComplete:true,name:user.first+' '+user.last,initials:(user.first[0]+user.last[0]).toUpperCase()};
+  localStorage.setItem('nlr_current',JSON.stringify(updated));
+  const users=JSON.parse(localStorage.getItem('nlr_users')||'[]');
+  const idx=users.findIndex(u=>u.id===user.id);
+  if(idx>=0)users[idx]=updated;else users.push(updated);
+  localStorage.setItem('nlr_users',JSON.stringify(users));
+  location.href='app.html';
+}
+
+function handlePhoto(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=document.getElementById('pimg');img.src=e.target.result;img.style.display='block';
+    document.getElementById('picon').style.display='none';
+    document.getElementById('rmbtn').style.display='inline-block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function removePhoto(){
+  const img=document.getElementById('pimg');img.src='';img.style.display='none';
+  document.getElementById('picon').style.display='flex';
+  document.getElementById('rmbtn').style.display='none';
+  delete prof.photo;
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  buildPills();renderProg();showStep(0);
+  document.getElementById('f-bio').addEventListener('input',function(){
+    if(this.value.length>280)this.value=this.value.slice(0,280);
+    document.getElementById('bio-cnt').textContent=this.value.length+' / 280 characters';
+  });
+});
+</script>
+</body>
+</html>
