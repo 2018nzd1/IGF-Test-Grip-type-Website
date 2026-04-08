@@ -83,6 +83,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
 .sgl{font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);font-family:'DM Mono',monospace;}
 .sgr{display:flex;flex-wrap:wrap;gap:5px;}
 .sl{padding:6px 10px;font-size:11px;font-family:'DM Mono',monospace;border-radius:6px;border:1px solid var(--b);background:var(--s);color:var(--t);}
+.sl.free{cursor:pointer;border-color:var(--bs);}
+.sl.free:hover{background:var(--grl);border-color:#6bbf87;color:var(--gr);}
+.sl.free:active{background:var(--grl);}
 .sl.conf{background:var(--al);border-color:#6bbf87;color:var(--a);}
 .sl.req{background:var(--pul);border-color:#a090d0;color:var(--pu);}
 .sl.them{background:var(--s2);color:var(--t3);text-decoration:line-through;}
@@ -375,13 +378,17 @@ function renderDetSl(){
       const them=att.schedule[s.id].has(sl.id),me=YOU.sched[s.id].has(sl.id);
       const isConf=me&&YOU.sched[s.id].get(sl.id)?.id===att.id;
       const isReq=out&&out.sess.id===s.id&&out.slot.id===sl.id;
-      if(isConf)btn.classList.add('conf');else if(isReq)btn.classList.add('req');else if(them)btn.classList.add('them');else if(me)btn.classList.add('mine');
+      if(isConf){btn.classList.add('conf');btn.title='Confirmed';}
+      else if(isReq){btn.classList.add('req');btn.title='Request sent';}
+      else if(them){btn.classList.add('them');btn.title='They are unavailable';}
+      else if(me){btn.classList.add('mine');btn.title='You have another meeting';}
+      else{btn.classList.add('free');btn.title='Tap to request this slot';btn.onclick=()=>openModal(s,sl);}
       btn.textContent=sl.label;grid.appendChild(btn);
     });
   });
 }
 
-function openModal(){
+function openModal(preloadSess,preloadSlot){
   if(!selA)return;pendSl=[];
   document.getElementById('m-ttl').textContent=`Request with ${selA.name.split(' ')[0]}`;
   document.getElementById('m-note').value='';
@@ -392,7 +399,15 @@ function openModal(){
     const sec=document.createElement('div');sec.innerHTML=`<div class="msl2">${s.label} · ${s.time}</div><div class="mslots" id="ms-${s.id}"></div>`;
     body.appendChild(sec);
     const sg=sec.querySelector(`#ms-${s.id}`);
-    free.forEach(sl=>{const d=document.createElement('div');d.className='msl';d.textContent=sl.label;d.onclick=()=>{const k=`${s.id}:${sl.id}`;if(pendSl.includes(k)){pendSl=pendSl.filter(x=>x!==k);d.classList.remove('on');}else{pendSl.push(k);d.classList.add('on');}};sg.appendChild(d);});
+    free.forEach(sl=>{
+      const d=document.createElement('div');d.className='msl';d.textContent=sl.label;
+      const k=`${s.id}:${sl.id}`;
+      if(preloadSess&&preloadSlot&&preloadSess.id===s.id&&preloadSlot.id===sl.id){
+        pendSl.push(k);d.classList.add('on');
+      }
+      d.onclick=()=>{if(pendSl.includes(k)){pendSl=pendSl.filter(x=>x!==k);d.classList.remove('on');}else{pendSl.push(k);d.classList.add('on');}};
+      sg.appendChild(d);
+    });
   });
   if(!anyF)body.innerHTML=`<div style="padding:8px 0;font-size:14px;color:var(--t2);">No overlapping free slots.</div>`;
   document.getElementById('modal').classList.add('on');
