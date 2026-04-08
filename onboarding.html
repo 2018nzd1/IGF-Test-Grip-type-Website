@@ -160,7 +160,7 @@ let cur=0, selType=null, selSectors=new Set();
 const prof={};
 
 const user=JSON.parse(localStorage.getItem('nlr_current')||'null');
-if(!user)location.href='index.html';
+if(!user)location.href="/";
 
 function renderProg(){
   const p=document.getElementById('prog');p.innerHTML='';
@@ -228,7 +228,7 @@ function finish(){
   const idx=users.findIndex(u=>u.id===user.id);
   if(idx>=0)users[idx]=updated;else users.push(updated);
   localStorage.setItem('nlr_users',JSON.stringify(users));
-  location.href='app.html';
+  location.href="/app";
 }
 
 function handlePhoto(input){
